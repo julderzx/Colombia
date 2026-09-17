@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Mi Colombia Querida! 🇨🇴 - Juego Divertido</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --yellow: #FFEA00;
+      --blue: #0088FF;
+      --red: #FF2A55;
+      --green: #00E676;
+      --purple: #9D00FF;
+      --orange: #FF7700;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #2D3142;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #70A6FF 0%, #FFB5E8 50%, #AFF8D8 100%);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background-image 0.5s ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      color: #FFF;
+      font-size: 2.8rem;
+      text-shadow: 4px 4px 0px var(--blue), 8px 8px 0px var(--red);
+      letter-spacing: 1px;
+    }
+
+    p.subtitle {
+      font-size: 1.3rem;
+      color: #FFF;
+      font-weight: 700;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+    }
+
+    .flag-bar {
+      height: 14px;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      margin: 12px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      border: 3px solid white;
+    }
+
+    .flag-yellow { background-color: var(--yellow); flex: 2; }
+    .flag-blue { background-color: var(--blue); flex: 1; }
+    .flag-red { background-color: var(--red); flex: 1; }
+
+    .quiz-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(4px);
+      width: 100%;
+      max-width: 950px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      position: relative;
+      border: 6px solid #FFF;
+      animation: popIn 0.4s ease-out;
+    }
+
+    .mascot-img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid var(--yellow);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+    }
+
+    .name-screen { text-align: center; }
+    .name-screen h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .form-input, .form-select {
+      width: 85%;
+      max-width: 420px;
+      padding: 14px 20px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border: 4px solid var(--blue);
+      border-radius: 20px;
+      outline: none;
+      color: var(--text-color);
+      box-shadow: 0 5px 0px #70A6FF;
+      background: white;
+      text-align: center;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--purple);
+      box-shadow: 0 5px 0px #9D00FF;
+    }
+
+    .start-btn {
+      background-color: var(--green);
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      border: 3px solid white;
+      border-radius: 18px;
+      padding: 16px 36px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0px #009944;
+      text-shadow: 1px 1px 0px #00695C;
+      transition: all 0.1s;
+    }
+
+    .start-btn:hover { transform: scale(1.05); }
+    .start-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #009944; }
+
+    .mode-screen { text-align: center; display: none; }
+    .mode-screen h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+
+    .mode-screen p {
+      margin-bottom: 25px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .mode-btn {
+      border: 4px solid white;
+      border-radius: 24px;
+      padding: 25px 15px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 180px;
+    }
+
+    .mode-btn:hover { transform: translateY(-5px); box-shadow: 0 12px 0px rgba(0,0,0,0.15); }
+    .mode-btn:active { transform: translateY(3px); }
+
+    .mode-btn span.desc {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      opacity: 0.95;
+      line-height: 1.3;
+    }
+
+    .btn-easy { background-color: var(--green); text-shadow: 2px 2px 0px #009944; }
+    .btn-medium { background-color: var(--orange); text-shadow: 2px 2px 0px #CC5500; }
+    .btn-hard { background-color: var(--red); text-shadow: 2px 2px 0px #AA0022; }
+
+    .progress-bar {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: var(--blue);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .timer-badge {
+      background-color: var(--red);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 0px #AA0022;
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .difficulty-badge {
+      background-color: var(--yellow);
+      color: #333;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 0px #D4AC00;
+    }
+
+    .score-badge {
+      background-color: var(--purple);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 0px #6A00B0;
+    }
+
+    .question-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #222;
+      background: #FFF9E6;
+      padding: 20px;
+      border-radius: 20px;
+      border: 3px dashed var(--yellow);
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background-color: #F0F4FF;
+      border: 3px solid #70A6FF;
+      border-radius: 18px;
+      padding: 16px 20px;
+      font-size: 1.1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-color);
+      font-weight: 700;
+      box-shadow: 0 5px 0px #70A6FF;
+    }
+
+    .option-btn:hover:not(:disabled) { background-color: #E0ECFF; transform: scale(1.01); }
+    .option-btn.correct {
+      background-color: #B9F6CA;
+      border-color: var(--green);
+      color: #00695C;
+      box-shadow: 0 5px 0px var(--green);
+    }
+    .option-btn.incorrect {
+      background-color: #FFCDD2;
+      border-color: var(--red);
+      color: #B71C1C;
+      box-shadow: 0 5px 0px var(--red);
+    }
+
+    .explanation-box {
+      background-color: #E3F2FD;
+      border: 3px solid var(--blue);
+      padding: 18px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #01579B;
+      animation: popIn 0.3s ease-out;
+    }
+
+    .next-btn {
+      background-color: var(--green);
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      border: 3px solid white;
+      border-radius: 18px;
+      padding: 14px 32px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: none;
+      margin: 0 auto;
+      box-shadow: 0 6px 0px #009944;
+      transition: all 0.1s;
+      text-shadow: 1px 1px 0px #00695C;
+    }
+
+    .next-btn:hover { transform: scale(1.05); }
+
+    .result-screen {
+      text-align: center;
+      display: none;
+      animation: popIn 0.5s ease-out;
+    }
+
+    .result-screen h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.3rem;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      font-size: 4.5rem;
+      margin: 10px 0;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+
+    .score-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--blue);
+      margin-bottom: 15px;
+    }
+
+    .ranking-box {
+      background: #FFF9E6;
+      border: 4px solid var(--yellow);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .ranking-box h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--orange);
+      margin-bottom: 15px;
+    }
+
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+    }
+
+    .ranking-table th {
+      background-color: var(--yellow);
+      color: #333;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .ranking-table td {
+      padding: 10px;
+      border-bottom: 2px solid #FFE082;
+      font-weight: 700;
+    }
+
+    .ranking-table tr.current-player {
+      background-color: #E3F2FD;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .restart-btn {
+      background-color: var(--red);
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      border: 3px solid white;
+      border-radius: 18px;
+      padding: 16px 32px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0px #AA0022;
+      text-shadow: 1px 1px 0px #660011;
+    }
+
+    .restart-btn:hover { transform: scale(1.05); }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      p.subtitle { font-size: 1rem; }
+      .quiz-container { padding: 20px; }
+      .mode-buttons { grid-template-columns: 1fr; }
+      .mode-btn { min-height: auto; padding: 18px; }
+      .progress-bar { justify-content: center; }
+      .question-title { font-size: 1.15rem; }
+      .option-btn { font-size: 1rem; }
+      .ranking-table { font-size: 0.85rem; }
+      .form-input, .form-select { width: 100%; font-size: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>¡Mi Colombia Querida! 🇨🇴</h1>
+    <p class="subtitle">¡Desafío Rápido de Geografía!</p>
+    <div class="flag-bar">
+      <div class="flag-yellow"></div>
+      <div class="flag-blue"></div>
+      <div class="flag-red"></div>
+    </div>
+  </header>
+
+  <main class="quiz-container">
+
+    <!-- PANTALLA 1: REGISTRO DE JUGADOR -->
+    <div id="name-screen" class="name-screen">
+      <img src="Gemini_Generated_Image_u1goy2u1goy2u1go.jpg" alt="Oso Explorador" class="mascot-img">
+      <h2>Hola jefe maestro cuál es tu nombre</h2>
+      <p style="font-size: 1.1rem; font-weight: bold; color: #555;">
+        Completa tus datos para iniciar la aventura:
+      </p>
+
+      <div class="form-group">
+        <input
+          type="text"
+          id="player-name-input"
+          class="form-input"
+          placeholder="Escribe tu nombre aquí"
+          maxlength="15"
+          autocomplete="off"
+        >
+
+        <select id="player-grade-select" class="form-select">
+          <option value="" disabled selected>Selecciona tu Curso</option>
+          <option value="301">Curso 301</option>
+          <option value="302">Curso 302</option>
+        </select>
+
+        <select id="player-shift-select" class="form-select">
+          <option value="" disabled selected>Selecciona tu Jornada</option>
+          <option value="Mañana">Jornada Mañana ☀️</option>
+          <option value="Tarde">Jornada Tarde 🌅</option>
+        </select>
+      </div>
+
+      <button class="start-btn" onclick="savePlayerName()">¡Continuar! 🚀</button>
+    </div>
+
+    <!-- PANTALLA 2: NIVELES -->
+    <div id="mode-screen" class="mode-screen">
+      <h2 id="welcome-player-text">¡Hola! 🎮</h2>
+      <p>¡Elige tu nivel y demuestra cuánto sabes de Colombia! 🇨🇴</p>
+
+      <div class="mode-buttons">
+        <button class="mode-btn btn-easy" onclick="startGame('easy')">
+          🌱 Modo Fácil
+          <span class="desc">(3.º Primaria)<br>¡Pistas sencillas y preguntas divertidas!</span>
+        </button>
+
+        <button class="mode-btn btn-medium" onclick="startGame('medium')">
+          🧭 Modo Intermedio
+          <span class="desc">(5.º Primaria)<br>¡Desafíos sobre ríos, montañas y naturaleza!</span>
+        </button>
+
+        <button class="mode-btn btn-hard" onclick="startGame('hard')">
+          🔥 Modo Pro
+          <span class="desc">(Avanzado)<br>¡Geografía avanzada, fronteras e historia!</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PANTALLA 3: JUEGO -->
+    <div id="game-screen" style="display: none;">
+      <div class="progress-bar">
+        <span id="question-number">Pregunta 1 de 5</span>
+        <span id="timer-badge" class="timer-badge">⏱️ 15s</span>
+        <span id="difficulty-badge" class="difficulty-badge">Nivel</span>
+        <span id="score-tracker" class="score-badge">⭐ 0 Pts</span>
+      </div>
+
+      <div class="question-title" id="question-text">Cargando la súper pregunta...</div>
+      <div class="options-container" id="options-container"></div>
+      <div class="explanation-box" id="explanation-box"></div>
+      <button class="next-btn" id="next-btn">¡Siguiente Pregunta! 🚀</button>
+    </div>
+
+    <!-- PANTALLA 4: RESULTADOS -->
+    <div class="result-screen" id="result-screen">
+      <h2 id="result-title">¡Excelente trabajo! 🎉</h2>
+      <div class="badge" id="result-badge">🌟</div>
+      <div class="score-text" id="final-score">Puntaje: 0 Puntos</div>
+
+      <div class="ranking-box">
+        <h3>🏆 Tabla de Posiciones 🏆</h3>
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>Posición</th>
+              <th>Jugador</th>
+              <th>Curso</th>
+              <th>Jornada</th>
+              <th>Puntos</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </div>
+
+      <button class="restart-btn" onclick="returnToMenu()">🔄 Registrar Otro Jugador</button>
+    </div>
+
+  </main>
+
+  <script>
+    const quizData = {
+      easy: [
+        {
+          question: "🏛️ La sede del Presidente\n¿Qué pasaría si... tuvieras que enviarle una carta urgente al Presidente de Colombia? ¿A qué ciudad capital tendrías que mandarla?",
+          options: [
+            { text: "A) A Cartagena, para que la lea en la playa. 🏖️", correct: false },
+            { text: "B) A Bogotá, porque allí está la Casa de Nariño. 🏛️", correct: true },
+            { text: "C) A Cali, para que la revise bailando salsa. 💃", correct: false },
+            { text: "D) A Medellín, para que la abra en el metro. 🚇", correct: false }
+          ],
+          explanation: "¡Explicación! Las decisiones oficiales se toman en Bogotá, nuestra gran capital. ✉️"
+        },
+        {
+          question: "☕ Pregunta: El desayuno mundial\n¿Qué pasaría si... fueras a un país muy lejano y dijeras '¡Vengo de Colombia!'? ¿Qué producto famoso nombrarían?",
+          options: [
+            { text: "A) El café recién colado. ☕", correct: true },
+            { text: "B) Las manzanas rojas. 🍎", correct: false },
+            { text: "C) El chocolate en barra. 🍫", correct: false },
+            { text: "D) El queso cheddar. 🧀", correct: false }
+          ],
+          explanation: "¡Explicación! Colombia es famosa mundialmente por su café. ☕🌱"
+        },
+        {
+          question: "🌊 Pregunta: Las vacaciones en la playa\n¿Qué pasaría si... quisieras nadar en los dos mares diferentes que tiene Colombia? ¿A cuáles irías?",
+          options: [
+            { text: "A) Al Océano Pacífico y al Mar Caribe. 🏊‍♂️", correct: true },
+            { text: "B) Al Océano Índico y al Mar Rojo. 🦈", correct: false },
+            { text: "C) Al Océano Glacial y al Mar Muerto. ❄️", correct: false },
+            { text: "D) Al Mar Mediterráneo y al Océano Atlántico. 🚢", correct: false }
+          ],
+          explanation: "¡Explicación! Colombia tiene costas en el Mar Caribe y el Océano Pacífico. 🌊"
+        },
+        {
+          question: "🎉 Pregunta: Símbolos Patrios\n¿Qué pasaría si... organizaras un desfile escolar? ¿Cuáles 3 símbolos oficiales deben ir al frente?",
+          options: [
+            { text: "A) El celular, el televisor y la computadora. 📱", correct: false },
+            { text: "B) La bandera, el escudo y el himno. 🇨🇴", correct: true },
+            { text: "C) El cuaderno, el lápiz y la regla. ✏️", correct: false },
+            { text: "D) El balón, la camiseta y los guantes. ⚽", correct: false }
+          ],
+          explanation: "¡Explicación! La bandera, el escudo y el himno representan a Colombia. 🇨🇴🎶"
+        },
+        {
+          question: "🌸 Pregunta Extra: La flor nacional\n¿Qué pasaría si... buscaras la flor emblemática de Colombia para regalar en un cumpleaños?",
+          options: [
+            { text: "A) El girasol gigante. 🌻", correct: false },
+            { text: "B) La orquídea (Cattleya trianae). 🌸", correct: true },
+            { text: "C) El rosa canina. 🌹", correct: false },
+            { text: "D) La margarita silvestre. 🌼", correct: false }
+          ],
+          explanation: "¡Explicación! La orquídea Cattleya trianae es la flor nacional de Colombia desde 1936. 🌸"
+        }
+      ],
+
+      medium: [
+        {
+          question: "🏔️ Pregunta: La montaña más alta\n¿Qué pasaría si... buscaras el punto más alto de Colombia cerca al mar para tocar las nubes?",
+          options: [
+            { text: "A) A la Sierra Nevada de Santa Marta. 🏔️", correct: true },
+            { text: "B) Al Cerro de Monserrate en Bogotá. ⛪", correct: false },
+            { text: "C) A la Piedra del Peñol en Guatapé. 🪨", correct: false },
+            { text: "D) Al Volcán Galeras en Pasto. 🌋", correct: false }
+          ],
+          explanation: "¡Explicación! La Sierra Nevada de Santa Marta tiene los picos nevados más altos cerca del mar. 🏔️"
+        },
+        {
+          question: "🐊 Pregunta: El río legendario\n¿Qué pasaría si... tuvieras que navegar por la arteria de agua más larga e importante del centro del país?",
+          options: [
+            { text: "A) Navegarías por el Río Amazonas. 🐍", correct: false },
+            { text: "B) Navegarías por el Río Magdalena. 🚣‍♂️", correct: true },
+            { text: "C) Navegarías por el Río Orinoco. 🐟", correct: false },
+            { text: "D) Navegarías por el Río Sinú. 🐊", correct: false }
+          ],
+          explanation: "¡Explicación! El río Magdalena ha sido una vía fluvial histórica muy importante para Colombia. 🚣‍♂️"
+        },
+        {
+          question: "🌴 Pregunta: Las palmas gigantes\n¿Qué pasaría si... viajaras al Quindío para ver el árbol nacional de Colombia?",
+          options: [
+            { text: "A) Palma de Cera del Quindío. 🌴", correct: true },
+            { text: "B) Árbol de Ceiba Gigante. 🌳", correct: false },
+            { text: "C) Palma de Coco Playera. 🥥", correct: false },
+            { text: "D) Pino Romeron. 🌲", correct: false }
+          ],
+          explanation: "¡Explicación! La Palma de Cera del Quindío es el árbol nacional de Colombia. 🌴"
+        },
+        {
+          question: "🐒 Pregunta: La selva gigante\n¿Qué pasaría si... exploraras el departamento más grande del sur lleno de biodiversidad?",
+          options: [
+            { text: "A) Estarías en el Amazonas. 🐒", correct: true },
+            { text: "B) Estarías en Antioquia. 🏙️", correct: false },
+            { text: "C) Estarías en Boyacá. 🚜", correct: false },
+            { text: "D) Estarías en Cundinamarca. 🌄", correct: false }
+          ],
+          explanation: "¡Explicación! Amazonas es el departamento más grande de Colombia y tiene una enorme biodiversidad. 🐒"
+        },
+        {
+          question: "🦅 Pregunta Extra: El rey de los cielos\n¿Qué pasaría si... miraras hacia lo alto de la Cordillera de los Andes para ver el ave nacional de Colombia?",
+          options: [
+            { text: "A) Verías al Águila Harpía. 🦅", correct: false },
+            { text: "B) Verías al Cóndor de los Andes. 🦅", correct: true },
+            { text: "C) Verías al Tucán Real. 🦜", correct: false },
+            { text: "D) Verías al Colibrí Gigante. 🐦", correct: false }
+          ],
+          explanation: "¡Explicación! El Cóndor de los Andes es el ave nacional de Colombia y simula la libertad en nuestro escudo. 🦅"
+        }
+      ],
+
+      hard: [
+        {
+          question: "🌵 Pregunta: El extremo norte\n¿Qué pasaría si... viajaras hasta el punto continental más al norte de América del Sur?",
+          options: [
+            { text: "A) Llegarías a Punta Gallinas (La Guajira). 🌵", correct: true },
+            { text: "B) Llegarías al Puerto de Buenaventura. 🚢", correct: false },
+            { text: "C) Llegarías a San José del Guaviare. 🌿", correct: false },
+            { text: "D) Llegarías a Tumaco (Nariño). 🏝️", correct: false }
+          ],
+          explanation: "¡Explicación! Punta Gallinas, en La Guajira, es el punto continental más al norte de América del Sur. 🌵"
+        },
+        {
+          question: "🎨 Pregunta: El pueblo de los zócalos\n¿Qué pasaría si... visitaras un municipio famoso por las figuras de colores en la base de sus casas?",
+          options: [
+            { text: "A) Visitarías Guatapé en Antioquia. 🏡", correct: true },
+            { text: "B) Visitarías Villa de Leyva en Boyacá. 🏰", correct: false },
+            { text: "C) Visitarías Barichara en Santander. 🧱", correct: false },
+            { text: "D) Visitarías Santa Cruz de Mompox. ⛪", correct: false }
+          ],
+          explanation: "¡Explicación! Guatapé es famoso por los coloridos zócalos de sus casas. 🎨"
+        },
+        {
+          question: "🏰 Pregunta: El santuario sobre el cañón\n¿Qué pasaría si... quisieras conocer un templo construido sobre un cañón gigante cerca a Ecuador?",
+          options: [
+            { text: "A) Irías al Santuario de Las Lajas (Nariño). 🏰", correct: true },
+            { text: "B) Irías a la Catedral de Sal de Zipaquirá. ⛏️", correct: false },
+            { text: "C) Irías al Señor de los Milagros en Buga. ⛪", correct: false },
+            { text: "D) Irías a la Iglesia de San Francisco en Cali. 🕌", correct: false }
+          ],
+          explanation: "¡Explicación! El Santuario de Las Lajas está construido sobre el cañón del río Guáitara. 🏰"
+        },
+        {
+          question: "🌈 Pregunta: El río de 5 colores\n¿Qué pasaría si... visitas una sierra para ver un río que parece un arcoíris en el agua?",
+          options: [
+            { text: "A) Contemplarías Caño Cristales (Meta). 🌈", correct: true },
+            { text: "B) Navegarías por el río Atrato en el Chocó. 🌧️", correct: false },
+            { text: "C) Navegarías por el río Cauca. 🌊", correct: false },
+            { text: "D) Cruzarías el río Inírida en Guainía. 🛶", correct: false }
+          ],
+          explanation: "¡Explicación! Caño Cristales es famoso por sus llamativos colores producidos por plantas acuáticas. 🌈"
+        },
+        {
+          question: "🗺️ Pregunta Extra: Las fronteras terrestres\n¿Qué pasaría si... tuvieras que nombrar los 5 países que comparten frontera terrestre directa con Colombia?",
+          options: [
+            { text: "A) Venezuela, Brasil, Perú, Ecuador y Panamá. 🗺️", correct: true },
+            { text: "B) Venezuela, Brasil, Bolivia, Chile y Panamá. 🌎", correct: false },
+            { text: "C) Costa Rica, Ecuador, Perú, Argentina y Brasil. 🌍", correct: false },
+            { text: "D) México, Panamá, Ecuador, Perú y Brasil. 🏖️", correct: false }
+          ],
+          explanation: "¡Explicación! Colombia limita por tierra con Venezuela, Brasil, Perú, Ecuador y Panamá. 🗺️"
+        }
+      ]
+    };
+
+    const bgImages = {
+      default: "linear-gradient(135deg, #70A6FF 0%, #FFB5E8 50%, #AFF8D8 100%)",
+      easy: "url('Gemini_Generated_Image_u1goy2u1goy2u1go (2).jpg')",
+      medium: "url('Gemini_Generated_Image_u1goy2u1goy2u1go (1).jpg')",
+      hard: "url('Gemini_Generated_Image_u1goy2u1goy2u1go (2).jpg')"
+    };
+
+    let playerName = "";
+    let playerGrade = "";
+    let playerShift = "";
+    let currentDifficulty = "easy";
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timeLeft = 15;
+    let timerInterval = null;
+    let activeQuestions = [];
+
+    const playersList = [];
+
+    const nameScreenEl = document.getElementById("name-screen");
+    const modeScreenEl = document.getElementById("mode-screen");
+    const gameScreenEl = document.getElementById("game-screen");
+    const resultScreenEl = document.getElementById("result-screen");
+    const playerNameInput = document.getElementById("player-name-input");
+    const playerGradeSelect = document.getElementById("player-grade-select");
+    const playerShiftSelect = document.getElementById("player-shift-select");
+    const welcomePlayerText = document.getElementById("welcome-player-text");
+    const questionTextEl = document.getElementById("question-text");
+    const optionsContainerEl = document.getElementById("options-container");
+    const explanationBoxEl = document.getElementById("explanation-box");
+    const nextBtnEl = document.getElementById("next-btn");
+    const questionNumberEl = document.getElementById("question-number");
+    const timerBadgeEl = document.getElementById("timer-badge");
+    const scoreTrackerEl = document.getElementById("score-tracker");
+    const difficultyBadgeEl = document.getElementById("difficulty-badge");
+
+    // Algoritmo Fisher-Yates para mezclar aleatoriamente
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function savePlayerName() {
+      const name = playerNameInput.value.trim();
+      const grade = playerGradeSelect.value;
+      const shift = playerShiftSelect.value;
+
+      if (name === "") {
+        alert("¡Por favor! Escribe tu nombre para empezar.");
+        playerNameInput.focus();
+        return;
+      }
+
+      if (!grade) {
+        alert("¡Por favor! Selecciona tu curso.");
+        playerGradeSelect.focus();
+        return;
+      }
+
+      if (!shift) {
+        alert("¡Por favor! Selecciona tu jornada.");
+        playerShiftSelect.focus();
+        return;
+      }
+
+      playerName = name;
+      playerGrade = grade;
+      playerShift = shift;
+
+      welcomePlayerText.textContent = `¡Hola, ${playerName}! 🎮`;
+      nameScreenEl.style.display = "none";
+      modeScreenEl.style.display = "block";
+    }
+
+    function startGame(difficulty) {
+      currentDifficulty = difficulty;
+      currentQuestionIndex = 0;
+      score = 0;
+      scoreTrackerEl.textContent = `⭐ ${score} Pts`;
+
+      activeQuestions = shuffleArray(quizData[currentDifficulty]);
+
+      if (bgImages[difficulty].startsWith("url")) {
+        document.body.style.backgroundImage = bgImages[difficulty];
+      } else {
+        document.body.style.background = bgImages[difficulty];
+      }
+
+      const modeNames = {
+        easy: "🌱 Fácil",
+        medium: "🧭 Intermedio",
+        hard: "🔥 Pro"
+      };
+
+      difficultyBadgeEl.textContent = modeNames[difficulty];
+      modeScreenEl.style.display = "none";
+      resultScreenEl.style.display = "none";
+      gameScreenEl.style.display = "block";
+
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      resetState();
+      const currentData = activeQuestions[currentQuestionIndex];
+
+      questionNumberEl.textContent = `Pregunta ${currentQuestionIndex + 1} de ${activeQuestions.length}`;
+      questionTextEl.innerText = `Pregunta ${currentQuestionIndex + 1}:\n${currentData.question}`;
+
+      const shuffledOptions = shuffleArray(currentData.options);
+      const prefixes = ["A) ", "B) ", "C) ", "D) "];
+
+      shuffledOptions.forEach((option, index) => {
+        const button = document.createElement("button");
+        const cleanText = option.text.replace(/^[A-D]\)\s*/, "");
+        button.innerText = prefixes[index] + cleanText;
+        button.classList.add("option-btn");
+
+        button.addEventListener("click", () => {
+          selectOption(button, option.correct, currentData.explanation);
+        });
+
+        optionsContainerEl.appendChild(button);
+      });
+
+      startTimer();
+    }
+
+    function startTimer() {
+      timeLeft = 15;
+      timerBadgeEl.textContent = `⏱️ ${timeLeft}s`;
+      clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerBadgeEl.textContent = `⏱️ ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+    }
+
+    function handleTimeOut() {
+      const allButtons = optionsContainerEl.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => btn.disabled = true);
+
+      const currentData = activeQuestions[currentQuestionIndex];
+      allButtons.forEach(btn => {
+        const btnClean = btn.innerText.replace(/^[A-D]\)\s*/, "");
+        const match = currentData.options.find(opt => opt.text.replace(/^[A-D]\)\s*/, "") === btnClean);
+        if (match && match.correct) {
+          btn.classList.add("correct");
+        }
+      });
+
+      explanationBoxEl.textContent = "⏱️ ¡Tiempo agotado! Recuerda responder rápido para ganar más puntos.";
+      explanationBoxEl.style.display = "block";
+      nextBtnEl.style.display = "block";
+    }
+
+    function resetState() {
+      clearInterval(timerInterval);
+      explanationBoxEl.style.display = "none";
+      nextBtnEl.style.display = "none";
+      optionsContainerEl.innerHTML = "";
+    }
+
+    function selectOption(selectedBtn, isCorrect, explanationText) {
+      clearInterval(timerInterval);
+      const allButtons = optionsContainerEl.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => btn.disabled = true);
+
+      const currentData = activeQuestions[currentQuestionIndex];
+
+      if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        const pointsEarned = 100 + (timeLeft * 10);
+        score += pointsEarned;
+        scoreTrackerEl.textContent = `⭐ ${score} Pts`;
+      } else {
+        selectedBtn.classList.add("incorrect");
+        allButtons.forEach(btn => {
+          const btnClean = btn.innerText.replace(/^[A-D]\)\s*/, "");
+          const match = currentData.options.find(opt => opt.text.replace(/^[A-D]\)\s*/, "") === btnClean);
+          if (match && match.correct) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      explanationBoxEl.textContent = explanationText;
+      explanationBoxEl.style.display = "block";
+      nextBtnEl.style.display = "block";
+    }
+
+    nextBtnEl.addEventListener("click", () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < activeQuestions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      gameScreenEl.style.display = "none";
+      resultScreenEl.style.display = "block";
+
+      document.getElementById("result-title").textContent = `¡Excelente trabajo, ${playerName}! 🎉`;
+      document.getElementById("final-score").textContent = `Puntaje Final: ${score} Puntos`;
+
+      playersList.push({ name: playerName, grade: playerGrade, shift: playerShift, score: score });
+      playersList.sort((a, b) => b.score - a.score);
+
+      const rankingBody = document.getElementById("ranking-body");
+      rankingBody.innerHTML = "";
+
+      playersList.forEach((player, index) => {
+        const tr = document.createElement("tr");
+        if (player.name === playerName && player.score === score) {
+          tr.classList.add("current-player");
+        }
+
+        let medal = `#${index + 1}`;
+        if (index === 0) medal = "🥇 1°";
+        if (index === 1) medal = "🥈 2°";
+        if (index === 2) medal = "🥉 3°";
+
+        tr.innerHTML = `
+          <td>${medal}</td>
+          <td>${player.name}</td>
+          <td>${player.grade}</td>
+          <td>${player.shift}</td>
+          <td>${player.score} pts</td>
+        `;
+        rankingBody.appendChild(tr);
+      });
+    }
+
+    function returnToMenu() {
+      playerNameInput.value = "";
+      playerGradeSelect.selectedIndex = 0;
+      playerShiftSelect.selectedIndex = 0;
+      document.body.style.backgroundImage = "none";
+      document.body.style.background = bgImages.default;
+      resultScreenEl.style.display = "none";
+      nameScreenEl.style.display = "block";
+    }
+  </script>
+</body>
+</html>
